@@ -1,0 +1,158 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+table td {
+  min-height: 5rem;
+  height: 8rem;
+  border: 0.1rem solid #e1e1e1;
+}
+
+table th {
+  border-top: 0.1rem solid #e1e1e1;
+  text-align: center;
+}
+
+.calc-date-field {
+  height: 2em;
+}
+
+thead {
+  background-color: #9b4dca;
+  color: white;
+}
+
+table td {
+  text-align: center;
+  font-size: 3rem;
+  color: #9b4dca;
+  cursor: pointer;
+}
+
+.container .nav {
+  margin: 3em auto;
+  text-align: center;
+}
+
+.nav-container {
+  display: inline-block;
+}
+
+.nav p {
+  margin-bottom: 0;
+  color: #9b4dca;
+
+}
+
+.container hr {
+  margin: 0 0 1em 0;
+}
+
+.nav-container button {
+  line-height: 0;
+  height: 2em;
+  margin-top: 1em;
+}
+
+.single-habit h3, .single-habit p, .single-habit button {
+  margin-bottom: 0;
+}
+
+.single-habit button {
+  line-height: 0;
+  height: 2em;
+}
+
+.single-habit {
+  margin-bottom: 2em;
+}
+
+.nav a.active {
+  font-weight: bold;
+}
+
+.nav a:focus, .nav a:hover {
+  color: #9b4dca;
+}
+
+.nav a:nth-child(2) {
+  margin: 0 1em 0 1em;
+}
+
+.later {
+  background-color: silver;
+}
+
+.container h2 {
+  margin-bottom: .2em;
+}
+
+.entry-area {
+  text-align: center;
+  margin-top: 10em;
+}
+
+.loader,
+.loader:after {
+  border-radius: 50%;
+  width: 10em;
+  height: 10em;
+}
+.loader {
+  background-color: #9b4dca;
+  margin: 60px auto;
+  font-size: 10px;
+  position: relative;
+  text-indent: -9999em;
+  border-top: 1.1em solid rgba(255, 255, 255, 0.2);
+  border-right: 1.1em solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1.1em solid rgba(255, 255, 255, 0.2);
+  border-left: 1.1em solid #9b4dca;;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation: load8 1.1s infinite linear;
+  animation: load8 1.1s infinite linear;
+}
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
