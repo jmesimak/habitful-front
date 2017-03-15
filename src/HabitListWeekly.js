@@ -4,6 +4,8 @@ import axios from 'axios'
 import { api } from './Api'
 import { userStore } from './UserStore'
 import { Habit } from './Habit'
+import _ from 'lodash'
+import { Link } from 'react-router';
 
 export default class HabitListWeekly extends Component {
 
@@ -17,63 +19,91 @@ export default class HabitListWeekly extends Component {
   }
 
   componentDidMount() {
-    console.log('mnt')
-    let today = moment()
     axios
       .get(`${api.endpoint}/habits`)
       .then((d) => {
-        console.log(d)
         let habitz = d.data.map((h) => {
           return new Habit(h.uuid, h.name, h.instances, h.type, h.goal)
         }).filter((h) => h.type === 'weekly')
-
-
-        habitz.forEach((h) => {
-          console.log(h)
-          h.instances = h.instances.filter((hi) => { hi = moment(hi); return hi.isoWeek() === today.isoWeek() && hi.year() && today.year() })
-        })
         this.setState({habits: habitz, loading: false})
-      })
-      .catch((e) => {
-        console.log(e)
       })
   }
 
   constructDates() {
+    let day = moment()
+    var start = moment(day).startOf('month').startOf('isoWeek')
+    var end = moment(day).endOf('month').endOf('isoWeek')
     let dates = []
-    for (var i = 13; i >= 0; i--) {
-      dates.push(moment().subtract(i, 'days'))
+    while(start <= end) {
+      dates.push(start.clone())
+      start.add(1, 'days')
     }
-    return dates.reverse()
+    return _.chunk(dates, 7)
   }
 
   addHabitInstance(habit, date) {
     axios
-      .post(`${api.endpoint}/habits/${habit.id}/instance`, {created_at: new Date()})
+      .post(`${api.endpoint}/habits/${habit.id}/instance`, {created_at: date})
       .then((answ) => {
-        habit.instances.push(new Date())
+        habit.instances.push(date)
         this.setState({habits: this.state.habits})
       })
+
   }
+
 
   render() {
 
+    let getTrs = (h) => {
+      let dateChunks = this.constructDates()
+      let trs = dateChunks.map((dateChunk, idx) => {
+
+        let dateChunkPassed = h.instances.filter((hi) => {
+          let hiMom = moment(hi)
+          let dcs = dateChunk.map((dc) => dc.format('MMM Do'))
+          return dcs.indexOf(hiMom.format('MMM Do')) !== -1
+        })
+        let tds = dateChunk.map((d, idx) => (
+          <td key={d}>
+            <div className="calc-date-name">
+              <span>{d.format('MMM Do')}</span>
+            </div>
+            <div className="calc-date-field" onClick={() => this.addHabitInstance(h, d.toDate())}>
+             {h.hasInstance(d.toDate()) ? '•' : ' '}
+            </div>
+          </td>
+        ))
+        return (
+          <tr key={idx} className={dateChunkPassed.length >= h.goal ? 'week-passed' : ''}>
+            {tds}
+          </tr>
+        )
+      })
+      return trs
+    }
+    const dateHeads = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat',' Sun'].map(d => (<th key={d}>{d}</th>))
     return (
       <div>
         <h2>Weekly habits</h2>
         <hr />
         <div className={this.state.loading ? 'loader' : ''}></div>
-        <ul>
-          {this.state.habits.map((habit, idx) => {
-            return (
-              <div key={idx} className="single-habit">
-                <h3>{habit.name}</h3>
-                <p>{`${habit.instances.length} out of ${habit.goal} this week`}</p>
-                <button onClick={() => this.addHabitInstance(habit)}>+</button>
-              </div>
-            )
-          })}
-        </ul>
+        {this.state.habits.map((h, idx) => {
+          return (
+            <div key={idx}>
+              <h2><Link to={`/habits/${h.id}`}>{h.name}</Link></h2>
+              <table>
+                <thead>
+                  <tr>
+                    {dateHeads}
+                  </tr>
+                </thead>
+                <tbody>
+                  {getTrs(h)}
+                </tbody>
+              </table>
+            </div>
+          )
+        })}
       </div>
     )
   }

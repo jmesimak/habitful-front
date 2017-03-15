@@ -4,6 +4,7 @@ import axios from 'axios'
 import { api } from './Api'
 import { userStore } from './UserStore'
 import { Habit } from './Habit'
+import { Link } from 'react-router';
 
 export default class HabitListWeekly extends Component {
 
@@ -65,7 +66,7 @@ export default class HabitListWeekly extends Component {
           {this.state.habits.map((habit, idx) => {
             return (
               <div key={idx} className="single-habit">
-                <h3>{habit.name}</h3>
+                <h2><Link to={`/habits/${habit.id}`}>{habit.name}</Link></h2>
                 <p>{`${habit.instances.length} out of ${habit.goal} this month`}</p>
                 <button onClick={() => this.addHabitInstance(habit)}>+</button>
               </div>

@@ -1,39 +1,35 @@
 import React, { Component } from 'react'
 import { Habit } from './Habit'
-import { browserHistory } from 'react-router';
-import moment from 'moment'
+import { hashHistory } from 'react-router';
+import { api } from './Api'
+import axios from 'axios'
 
 export default class HabitView extends Component {
   constructor(props) {
     super(props)
-
-    let habit = this.loadHabit()
+    console.log(props)
     this.state = {
-      habit: habit
+      habit: {}
     }
-
     this.deleteHabit = this.deleteHabit.bind(this)
   }
 
-  loadHabit() {
-    return (JSON.parse(localStorage.getItem("habits")) || [])
-      .map((h) => new Habit(h.id, h.name, h.instances))
-      .find((h) => h.id === this.props.params.id)
-  }
-
-  constructDates() {
-    let dates = []
-    for (var i = 13; i >= 0; i--) {
-      dates.push(moment().subtract(i, 'days'))
-    }
-    return dates.reverse()
+  componentDidMount() {
+    axios
+      .get(`${api.endpoint}/habits/${this.props.params.id}`)
+      .then((habit) => {
+        this.setState({
+          habit: habit.data
+        })
+      })
   }
 
   deleteHabit() {
-    let toSave = (JSON.parse(localStorage.getItem("habits")) || [])
-      .filter((h) => h.id !== this.props.params.id)
-    localStorage.setItem("habits", JSON.stringify(toSave))
-    browserHistory.push('/habits');
+    axios
+      .delete(`${api.endpoint}/habits/${this.state.habit.uuid}`)
+      .then(() => {
+        hashHistory.push('/habits/daily')
+      })
   }
 
   render() {

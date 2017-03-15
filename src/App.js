@@ -1,8 +1,13 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router';
 import { userStore } from './UserStore'
+import axios from 'axios'
 
 class App extends Component {
+
+  componentDidMount() {
+    axios.defaults.headers.common['token'] = userStore.getToken()
+  }
 
   render() {
     let links = ["daily", "weekly", "monthly"].map((t) => (

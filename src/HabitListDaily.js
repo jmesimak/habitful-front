@@ -3,6 +3,7 @@ import moment from 'moment'
 import axios from 'axios'
 import { api } from './Api'
 import { userStore } from './UserStore'
+import { Link } from 'react-router';
 import { Habit } from './Habit'
 import _ from 'lodash'
 
@@ -55,53 +56,49 @@ export default class HabitListDaily extends Component {
 
     let getTrs = (h) => {
       let dateChunks = this.constructDates()
-      let trs = dateChunks.map((dateChunk) => {
-        let tds = dateChunk.map((d) => (
+      let trs = dateChunks.map((dateChunk, idx) => {
+        let tds = dateChunk.map((d, idx) => (
           <td key={d} >
-            <div>
-              <div className="calc-date-name">
-                <span>{d.format('MMM Do')}</span>
-              </div>
-              <div className="calc-date-field" onClick={() => this.addHabitInstance(h, d.toDate())}>
-               {h.hasInstance(d.toDate()) ? '•' : ' '}
-              </div>
+            <div className="calc-date-name">
+              <span>{d.format('MMM Do')}</span>
+            </div>
+            <div className="calc-date-field" onClick={() => this.addHabitInstance(h, d.toDate())}>
+             {h.hasInstance(d.toDate()) ? '•' : ' '}
             </div>
           </td>
         ))
         return (
-          <tr>
+          <tr key={idx}>
             {tds}
           </tr>
         )
       })
       return trs
     }
-    const dateHeads = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat',' Sun'].map(d => (<th>{d}</th>))
+    const dateHeads = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat',' Sun'].map(d => (<th key={d}>{d}</th>))
     return (
       <div>
         <h2>Daily habits</h2>
         <hr />
         <div className={this.state.loading ? 'loader' : ''}></div>
-        <ul>
-          {this.state.habits.map((h, idx) => {
-            return (
-              <div key={idx}>
-                <h2>{h.name}</h2>
-                <p>Streak: {h.calcStreak(h.instances)}</p>
-                <table>
-                  <thead>
-                    <tr>
-                      {dateHeads}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {getTrs(h)}
-                  </tbody>
-                </table>
-              </div>
-            )
-          })}
-        </ul>
+        {this.state.habits.map((h, idx) => {
+          return (
+            <div key={idx}>
+              <h2><Link to={`/habits/${h.id}`}>{h.name}</Link></h2>
+              <p>Streak: {h.calcStreak(h.instances)}</p>
+              <table>
+                <thead>
+                  <tr>
+                    {dateHeads}
+                  </tr>
+                </thead>
+                <tbody>
+                  {getTrs(h)}
+                </tbody>
+              </table>
+            </div>
+          )
+        })}
       </div>
     )
   }
