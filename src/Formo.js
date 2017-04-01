@@ -31,13 +31,19 @@ export default class Formo extends Component {
     let inputs = this.props.config.inputs.map((input) => {
       if (input.type === 'text') {
         return (
-          <input type="text" onChange={this.registerChange.bind(this, input.name)} key={input.name}/>
+          <input type="text" onChange={this.registerChange.bind(this, input.name)} key={input.name} placeholder={input.placeholder} />
+        )
+      }
+
+      if (input.type === 'textarea') {
+        return (
+          <textarea  onChange={this.registerChange.bind(this, input.name)} key={input.name} placeholder={input.placeholder} />
         )
       }
 
       if (input.type === 'number') {
         return (
-          <input type="number" onChange={this.registerChange.bind(this, input.name)} key={input.name}/>
+          <input type="number" onChange={this.registerChange.bind(this, input.name)} key={input.name} placeholder={input.placeholder} />
         )
       }
 

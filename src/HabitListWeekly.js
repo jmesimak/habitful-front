@@ -14,8 +14,11 @@ export default class HabitListWeekly extends Component {
     axios.defaults.headers.common['token'] = userStore.getToken()
     this.state = {
       habits: [],
-      loading: true
+      loading: true,
+      shareTargets: {}
     }
+    this.shareUpdate = this.shareUpdate.bind(this)
+    this.shareHabit = this.shareHabit.bind(this)
   }
 
   componentDidMount() {
@@ -41,16 +44,37 @@ export default class HabitListWeekly extends Component {
     return _.chunk(dates, 7)
   }
 
-  addHabitInstance(habit, date) {
-    axios
-      .post(`${api.endpoint}/habits/${habit.id}/instance`, {created_at: date})
-      .then((answ) => {
-        habit.instances.push(date)
-        this.setState({habits: this.state.habits})
-      })
-
+  shareUpdate(habit, event) {
+    let shareTargets = this.state.shareTargets
+    shareTargets[habit.id] = event.target.value
+    let state = this.state
+    this.setState(state, () => console.log(this.state.shareTargets))
   }
 
+  shareHabit(h) {
+    axios.post(`${api.endpoint}/habit_pools`, {habit: h, target: this.state.shareTargets[h.id]})
+      .then((answ) => console.log)
+  }
+
+  addHabitInstance(habit, date) {
+    console.log(`Adding ${date} to ${habit.name}`)
+    if (habit.hasInstance(date)) {
+      axios
+        .delete(`${api.endpoint}/habits/${habit.id}/instances`, {data: {created_at: date}})
+        .then((answ) => {
+          habit.instances = habit.instances.filter(hi => moment(hi).format() !== moment(date).format())
+          this.setState({habits: this.state.habits})
+        })
+        .catch((e) => console.log)
+    } else {
+      axios
+        .post(`${api.endpoint}/habits/${habit.id}/instance`, {created_at: date})
+        .then((answ) => {
+          habit.instances.push(date)
+          this.setState({habits: this.state.habits})
+        })
+    }
+  }
 
   render() {
 
@@ -101,6 +125,7 @@ export default class HabitListWeekly extends Component {
                   {getTrs(h)}
                 </tbody>
               </table>
+              <button onClick={() => this.shareHabit(h)}>Share to</button><input type="text" onChange={this.shareUpdate.bind(this, h)} />
             </div>
           )
         })}

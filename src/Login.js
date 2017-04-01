@@ -42,13 +42,20 @@ export default class Login extends Component {
       userStore.setCurrentUser(this.state.email)
       hashHistory.push(`/habits/daily`)
     })
-    .catch((e) => console.log)
+    .catch((e) => {
+      this.setState({
+        fail: true
+      })
+    })
   }
 
   render() {
+    let warn = ''
+    if (this.state.fail) warn = (<p>Wrong user / password</p>)
     return (
       <div className="container">
         <h1>Enter your credentials</h1>
+        {warn}
         <input type="text" placeholder="email" onChange={this.onEmailChange} />
         <input type="password" placeholder="password" onChange={this.onPasswordChange} />
         <button onClick={this.submitLogin}>Sign in</button>

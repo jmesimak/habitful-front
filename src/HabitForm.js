@@ -32,11 +32,18 @@ class HabitForm extends Component {
       inputs: [
         {
           type: 'text',
-          name: 'name'
+          name: 'name',
+          placeholder: 'Name'
         },
         {
           type: 'number',
-          name: 'goal'
+          name: 'goal',
+          placeholder: 'Goal (number)'
+        },
+        {
+          type: 'textarea',
+          name: 'description',
+          placeholder: 'Description'
         },
         {
           type: 'select',

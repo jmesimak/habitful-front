@@ -35,20 +35,30 @@ export default class HabitListDaily extends Component {
     var end = moment(day).endOf('month').endOf('isoWeek')
     let dates = []
     while(start <= end) {
-      dates.push(start.clone())
+      dates.push(start.clone().hours(12))
       start.add(1, 'days')
     }
     return _.chunk(dates, 7)
   }
 
   addHabitInstance(habit, date) {
-    axios
-      .post(`${api.endpoint}/habits/${habit.id}/instance`, {created_at: date})
-      .then((answ) => {
-        habit.instances.push(date)
-        this.setState({habits: this.state.habits})
-      })
-
+    console.log(`Adding ${date} to ${habit.name}`)
+    if (habit.hasInstance(date)) {
+      axios
+        .delete(`${api.endpoint}/habits/${habit.id}/instances`, {data: {created_at: date}})
+        .then((answ) => {
+          habit.instances = habit.instances.filter(hi => moment(hi).format() !== moment(date).format())
+          this.setState({habits: this.state.habits})
+        })
+        .catch((e) => console.log)
+    } else {
+      axios
+        .post(`${api.endpoint}/habits/${habit.id}/instance`, {created_at: date})
+        .then((answ) => {
+          habit.instances.push(date)
+          this.setState({habits: this.state.habits})
+        })
+    }
   }
 
 

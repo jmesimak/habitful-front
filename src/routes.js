@@ -12,6 +12,7 @@ import NoMatch from './NoMatch';
 import Login from './Login'
 import Front from './Front'
 import Register from './Register'
+import Goals from './Goals'
 import HabitListDaily from './HabitListDaily'
 import HabitListWeekly from './HabitListWeekly'
 import HabitListMonthly from './HabitListMonthly'
@@ -26,6 +27,7 @@ const Routes = (props) => (
       <Route path="daily" component={HabitListDaily} />
       <Route path="weekly" component={HabitListWeekly} />
       <Route path="monthly" component={HabitListMonthly} />
+      <Route path="goals" component={Goals} />
       <Route path=":id" component={HabitView} />
       <Route path="*" component={NoMatch}/>
     </Route>

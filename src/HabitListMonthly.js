@@ -44,16 +44,25 @@ export default class HabitListWeekly extends Component {
     return dates.reverse()
   }
 
-  addHabitInstance(habit) {
-    axios
-      .post(`${api.endpoint}/habits/${habit.id}/instance`, {created_at: new Date()})
-      .then((answ) => {
-        habit.instances.push(new Date())
-        this.setState({habits: this.state.habits})
-      })
-
+  addHabitInstance(habit, date) {
+    console.log(`Adding ${date} to ${habit.name}`)
+    if (habit.hasInstance(date)) {
+      axios
+        .delete(`${api.endpoint}/habits/${habit.id}/instances`, {data: {created_at: date}})
+        .then((answ) => {
+          habit.instances = habit.instances.filter(hi => moment(hi).format() !== moment(date).format())
+          this.setState({habits: this.state.habits})
+        })
+        .catch((e) => console.log)
+    } else {
+      axios
+        .post(`${api.endpoint}/habits/${habit.id}/instance`, {created_at: date})
+        .then((answ) => {
+          habit.instances.push(date)
+          this.setState({habits: this.state.habits})
+        })
+    }
   }
-
 
   render() {
 

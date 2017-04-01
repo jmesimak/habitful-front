@@ -48,7 +48,7 @@ export default class Register extends Component {
   render() {
     return (
       <div className="container">
-        <h1>Enter your credentials</h1>
+        <h1>Who are you?</h1>
         <input type="text" placeholder="email" onChange={this.onEmailChange} />
         <input type="password" placeholder="password" onChange={this.onPasswordChange} />
         <button onClick={this.submitRegister}>Sign up</button>

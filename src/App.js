@@ -1,12 +1,16 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router';
+import { Link, hashHistory } from 'react-router';
 import { userStore } from './UserStore'
 import axios from 'axios'
 
 class App extends Component {
 
   componentDidMount() {
-    axios.defaults.headers.common['token'] = userStore.getToken()
+    if (userStore.getToken() === 'undefined' || userStore.getToken() === undefined) {
+      hashHistory.push('/login')
+    } else {
+      axios.defaults.headers.common['token'] = userStore.getToken()
+    }
   }
 
   render() {
@@ -23,7 +27,7 @@ class App extends Component {
               <p>Hi,</p>
               <p>{userStore.getCurrentUser()}</p>
               <br />
-              {links}
+              {links} | <Link to={`/habits/goals`} activeClassName="active"> goals </Link>
               <br />
               <button className="button-outline"><Link to="/habits/new">Create a new habit</Link></button>
             </div>
